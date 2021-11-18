@@ -1,0 +1,27 @@
+.contact_list {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.contact_item {
+  border: 2px solid blue;
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 5px;
+  margin-bottom: 10px;
+
+  &::marker {
+    color: red;
+  }
+}
+
+.contact_btn {
+  margin-left: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0088fa;
+    color: #fff;
+  }
+}

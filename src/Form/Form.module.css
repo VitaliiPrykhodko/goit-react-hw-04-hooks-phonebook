@@ -1,0 +1,42 @@
+.form_contact {
+  display: inline-flex;
+  flex-direction: column;
+  border: 2px solid blue;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.form_label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  margin-bottom: 10px;
+  width: 400px;
+}
+
+.input_contact {
+  border-color: red;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    background-color: #0088fa;
+    color: #fff;
+  }
+}
+
+.btn_contact {
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 10px;
+  &:hover {
+    background-color: #0088fa;
+    color: #fff;
+  }
+}
+.filter_label {
+  display: block;
+   flex-direction: column;
+ }
