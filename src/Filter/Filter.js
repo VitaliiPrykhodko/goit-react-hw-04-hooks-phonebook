@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import styles from "./Filter.module.css"
 
-const Filter= ({filter, handleFilter}) => {
+const Filter = ({filter, handleFilter}) => {
     return (
         <div className={styles.filter_box}>
              <label className={styles.filter_label}>

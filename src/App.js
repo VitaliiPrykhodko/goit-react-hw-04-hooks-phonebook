@@ -1,42 +1,45 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import shortid from "shortid";
 import Form from "./Form/Form.js";
 import ContactList from "./Contacts/ContactsList";
 import Filter from "./Filter/Filter";
-import styles from "./App.module.css"
+import styles from "./App.module.css";
 
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: "",
-  };
-  
+function App() {
+  const [contacts, setContacts] = useState(() => localStorage() ?? []);
+  const [filter, setFilter] = useState("");
 
-  componentDidMount() {
-   const contacts =  localStorage.getItem('contacts')
-    const parseContacts = JSON.parse(contacts)
-    if (parseContacts) {
-      this.setState({
-      contacts: parseContacts
-    })
-    }
+  function localStorage() {
+    const contacts = window.localStorage.getItem("contacts");
+    const parseContacts = JSON.parse(contacts);
+    return parseContacts;
   }
 
-   componentDidUpdate(prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts',JSON.stringify(this.state.contacts))
+  useEffect(() => {
+    if (contacts !== []) {
+      window.localStorage.setItem("contacts", JSON.stringify(contacts));
     }
-  }
+  }, [contacts]);
 
-  handleFilter = (e) => {
+  function handleFilter(e) {
     const { value } = e.currentTarget;
-    this.setState({
-      filter: value,
-    });
-  };
+    setFilter(value);
+  }
 
-  handleAddContact = (name, number) => {
-    const { contacts } = this.state;
+  function handleDeleteContact(contactId) {
+    setContacts(contacts.filter((contact) => contact.key !== contactId));
+  }
+
+  function foundContacts() {
+    const normalizeFilter = filter.toLowerCase();
+    if (contacts) {
+      return contacts.filter((contact) => {
+        return contact.name.toLowerCase().includes(normalizeFilter);
+      });
+    }
+  }
+
+  function handleAddContact(name, number) {
     if (
       contacts.find((contact) => {
         return contact.name === name || contact.number === number;
@@ -46,48 +49,29 @@ class App extends Component {
 
     if (name === "" || number === "") return alert("Please enter correct name");
     else {
-      this.setState({
-        contacts: [
-          ...contacts,
-          {
-            key: shortid.generate(),
-            name: name,
-            number: number,
-          },
-        ],
-      });
+      setContacts((prev) => [
+        ...prev,
+        {
+          key: shortid.generate(),
+          name: name,
+          number: number,
+        },
+      ]);
     }
-  };
-
-  handleDeleteContact = (contactId) => {
-    this.setState((prevState) => ({
-      contacts: prevState.contacts.filter(
-        (contact) => contact.key !== contactId
-      ),
-    }));
-  };
-
-  render() {
-    const { contacts, filter } = this.state;
-    const normalizeFilter = filter.toLowerCase();
-
-    const foundContacts = contacts.filter((contact) => {
-      return contact.name.toLowerCase().includes(normalizeFilter);
-    });
-
-    return (
-      <div className={styles.App}>
-        <h1>Phonebook</h1>
-        <Form onClick={this.handleAddContact} />
-        <h2 className="contact_title">Contacts</h2>
-        <Filter filter={filter} handleFilter={this.handleFilter} />
-        <ContactList
-          contacts={foundContacts}
-          handleDeleteContact={this.handleDeleteContact}
-        />
-      </div>
-    );
   }
+
+  return (
+    <div className={styles.App}>
+      <h1>Phonebook</h1>
+      <Form onClick={handleAddContact} />
+      <h2 className="contact_title">Contacts</h2>
+      <Filter filter={filter} handleFilter={handleFilter} />
+      <ContactList
+        contacts={foundContacts()}
+        handleDeleteContact={handleDeleteContact}
+      />
+    </div>
+  );
 }
 
 export default App;
